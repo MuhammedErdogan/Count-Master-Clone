@@ -50,18 +50,26 @@ namespace Player
             EventManager.StartListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
             EventManager.StartListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
             EventManager.StartListening(EventKeys.OnEnemyContact, EnemyContact);
+            EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
             EventManager.StopListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
+            EventManager.StopListening(EventKeys.OnEnemyContact, EnemyContact);
+            EventManager.StopListening(EventKeys.OnGateContactEnter, GateAnalyser);
         }
 
         private void Init()
         {
             //TO DO: Init playerUnits with using object pooling
             MoveAction += Move;
+        }
+
+        private void GateAnalyser(object[] objects)
+        {
+            //TO DO: Analyse gate and add or substract given value
         }
 
         private void AddUnit(int count)
@@ -136,7 +144,6 @@ namespace Player
 
                 _units[i].transform.DOLocalMove(NewPos, 0.5f).SetEase(Ease.OutBack);
             }
-
         }
 
         private void Move()

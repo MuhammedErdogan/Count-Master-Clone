@@ -10,7 +10,9 @@ public enum EventKeys
     LevelCompleted,
     LevelFailed,
 
-    OnGateContact,
+    Buttonclicked,
+
+    OnGateContactEnter,
     OnEnemyContact,
 
     OnPlayerUnitSpawned,
@@ -68,4 +70,20 @@ public enum PlayerState
     Chase,
     Attack,
     Dead,
+}
+
+public enum Operations
+{
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+
+public enum ButtonType
+{
+    Play,
+    Pause,
+    Resume,
+    Restart,
 }

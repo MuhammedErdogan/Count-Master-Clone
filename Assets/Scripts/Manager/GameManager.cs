@@ -27,14 +27,52 @@ namespace Manager
             Instance = this;
         }
 
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventKeys.Buttonclicked, OnButtonClicked);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventKeys.Buttonclicked, OnButtonClicked);
+        }
+
+        private void OnButtonClicked(object[] buttonType)
+        {
+            Debug.Log("Button clicked: " + buttonType);
+
+            switch ((ButtonType)buttonType[0])
+            {
+                case ButtonType.Play:
+                    StartGame();
+                    break;
+                case ButtonType.Resume:
+                    ResumeGame();
+                    break;
+                case ButtonType.Restart:
+                    RestarGame();
+                    break;
+                case ButtonType.Pause:
+                    PauseGame();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void StartGame()
+        {
+            EventManager.TriggerEvent(EventKeys.OnGameStarted);
+        }
+
+        private void RestarGame()
         {
             EventManager.TriggerEvent(EventKeys.OnGameStarted);
         }
 
         private void EndGame()
         {
-            EventManager.TriggerEvent(EventKeys.OnGameEnded);
+
         }
 
         private void PauseGame()

@@ -96,10 +96,10 @@ namespace Manager
                 return;
             }
 
-            if (!TriggerEventParameterCheck(eventType, parameters))
-            {
-                return;
-            }
+            //if (!TriggerEventParameterCheck(eventType, parameters))
+            //{
+            //    return;
+            //}
 
             Debug.Log($"Triggering event {eventType}, invocationListLength: {thisEvent.GetInvocationList().Length}");
 
