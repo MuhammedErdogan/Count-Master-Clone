@@ -13,4 +13,15 @@ public class PlayerUnit : MonoBehaviour
     {
         
     }
+
+    private void Init(object[] objects)
+    {
+        
+    }
+
+    public void DestroyUnit()
+    {
+        //TO DO destroy unit with animation
+        gameObject.SetActive(false);
+    }
 }

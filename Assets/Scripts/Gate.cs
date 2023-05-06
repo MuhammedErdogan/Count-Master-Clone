@@ -32,7 +32,9 @@ public class Gate : MonoBehaviour, IContactable
 
     public void OnContactEnter(GameObject other, Vector3 point)
     {
-        EventManager.TriggerEvent(EventKeys.OnGateContactEnter, new object[] { other, point, point.x < 0 ? leftValue : rightValue, point.x < 0 ? LeftOperation : rightOperation });
+        bool isLeft = point.x < 0;
+        EventManager.TriggerEvent(EventKeys.OnGateContactEnter, new object[] { other, point, isLeft ? leftValue : rightValue, isLeft ? LeftOperation : rightOperation });
+        Debug.Log("Gate OnContactEnter");
     }
 
     public void OnContactExit(GameObject other, Vector3 point)

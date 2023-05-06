@@ -17,7 +17,7 @@ namespace Player
                 return;
             }
 
-            contactable.OnContactEnter(other.gameObject, other.ClosestPoint(transform.position));
+            contactable.OnContactEnter(gameObject, other.ClosestPoint(transform.position));
         }
 
         private void OnTriggerExit(Collider other)
@@ -27,7 +27,7 @@ namespace Player
                 return;
             }
 
-            contactable.OnContactExit(other.gameObject, other.ClosestPoint(transform.position));
+            contactable.OnContactExit(gameObject, other.ClosestPoint(transform.position));
         }
     }
 }
