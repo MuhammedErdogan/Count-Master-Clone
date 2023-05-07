@@ -202,5 +202,10 @@ namespace Player
         {
 
         }
+
+        private void MakeHumanTower()
+        {
+
+        }
     }
 }
