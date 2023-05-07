@@ -1031,7 +1031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4347471a5387cd448a5c7dea3a34faf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _distanceFactor: 0.25
+  _distanceFactor: 0.125
   _radius: 1
   _jumpForce: 5
   _units:
@@ -3478,10 +3478,6 @@ PrefabInstance:
     - target: {fileID: 7065506696494141025, guid: 3b1e0326622accf4b932a28def58bd28, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7065506696494141026, guid: 3b1e0326622accf4b932a28def58bd28, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7065506696494141028, guid: 3b1e0326622accf4b932a28def58bd28, type: 3}
       propertyPath: m_Name

@@ -15,7 +15,6 @@ namespace Player
         #endregion
 
         #region Components
-        private Rigidbody _rb;
         #endregion
 
         #region Variables
@@ -39,7 +38,6 @@ namespace Player
         private void Awake()
         {
             Instance = this;
-            _rb = GetComponent<Rigidbody>();
         }
 
         private void OnEnable()
