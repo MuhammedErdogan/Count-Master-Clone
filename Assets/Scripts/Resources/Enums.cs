@@ -67,9 +67,8 @@ public enum EnemyState
 public enum PlayerState
 {
     Idle,
-    Chase,
+    Run,
     Attack,
-    Dead,
 }
 
 public enum Operations

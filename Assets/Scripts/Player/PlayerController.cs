@@ -20,7 +20,7 @@ namespace Player
         #region Variables
         [Range(0f, 1f)][SerializeField] private float _distanceFactor, _radius;
         [SerializeField] private float _jumpForce = 5f;
-        private Vector3 _startPosition;
+        [SerializeField] PlayerState _state;
         #endregion
 
         #region lists
@@ -60,9 +60,12 @@ namespace Player
 
         private void Init(object[] objects)
         {
-            //TO DO: Init playerUnits with using object pooling
-            //MoveAction = Move;
             Debug.Log("PlayerController Init");
+            _state = PlayerState.Run;
+            for (int i = 0; i < _units.Count; i++)
+            {
+                _units[i].Init(_state);
+            }
         }
 
         private void GateAnalyser(object[] objects)
@@ -97,7 +100,9 @@ namespace Player
             {
                 var unit = PoolManager.Instance.SpawnFromPool(PoolType.PlayerUnit, transform.position, Quaternion.identity);
                 unit.transform.SetParent(transform);
-                _units.Add(unit.GetComponent<PlayerUnit>());
+                PlayerUnit unitComponent = unit.GetComponent<PlayerUnit>();
+                unitComponent.Init(_state);
+                _units.Add(unitComponent);
             }
 
             ReformatUnits();
@@ -184,6 +189,16 @@ namespace Player
         }
 
         private void EnemyContact(object[] objects)
+        {
+            _state = PlayerState.Attack;
+
+            for (int i = 0; i < _units.Count; i++)
+            {
+                _units[i].ChangeState(_state);
+            }
+        }
+
+        private void MoveUnitsCloserToEnemy()
         {
 
         }

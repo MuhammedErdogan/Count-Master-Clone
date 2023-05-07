@@ -24,4 +24,11 @@ public static class Constants
     {
 
     }
+
+    public static class Animations
+    {
+        public const string RUN = "Run";
+        public const string Attack = "Attack";
+        public const string Death = "Death";
+    }
 }
