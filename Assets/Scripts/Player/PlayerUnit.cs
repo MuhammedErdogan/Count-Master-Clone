@@ -1,3 +1,4 @@
+using Interface;
 using Manager;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,6 +55,14 @@ namespace Player
         {
             //TO DO destroy unit with animation
             gameObject.SetActive(false);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out IContactable contactable))
+            {
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitHit, new object[] {other, this});
+            }
         }
     }
 }

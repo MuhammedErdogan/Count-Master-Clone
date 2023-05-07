@@ -45,7 +45,7 @@ namespace Player
             EventManager.StartListening(EventKeys.OnGameStarted, Init);
             EventManager.StartListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
             EventManager.StartListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
-            EventManager.StartListening(EventKeys.OnEnemyContact, EnemyContact);
+            EventManager.StartListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
             EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
         }
 
@@ -54,7 +54,7 @@ namespace Player
             EventManager.StopListening(EventKeys.OnGameStarted, Init);
             EventManager.StopListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
             EventManager.StopListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
-            EventManager.StopListening(EventKeys.OnEnemyContact, EnemyContact);
+            EventManager.StopListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
             EventManager.StopListening(EventKeys.OnGateContactEnter, GateAnalyser);
         }
 
@@ -196,6 +196,8 @@ namespace Player
             {
                 _units[i].ChangeState(_state);
             }
+
+
         }
 
         private void MoveUnitsCloserToEnemy()

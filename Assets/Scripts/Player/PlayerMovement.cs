@@ -18,6 +18,9 @@ namespace Player
         private bool _isGameStarted = false;
         private float _currentVelocity;
 
+        private float _currentSpeed;
+        private bool _isEnemyContact = false;
+
         void Start()
         {
             _rb = GetComponent<Rigidbody>();
@@ -27,21 +30,26 @@ namespace Player
         private void OnEnable()
         {
             EventManager.StartListening(EventKeys.OnGameStarted, Init);
+            EventManager.StartListening(EventKeys.PlayerOnEnemyContact, EnemyMovementStarted);
+            EventManager.StartListening(EventKeys.EnemyContactEnded, EnemyMovementended);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventKeys.OnGameStarted, Init);
+            EventManager.StopListening(EventKeys.PlayerOnEnemyContact, EnemyMovementStarted);
+            EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyMovementended);
         }
 
         private void Init(object[] obj)
         {
             _isGameStarted = true;
+            _currentSpeed = _speed;
         }
 
         void Update()
         {
-            if (!_isGameStarted)
+            if (!_isGameStarted || _isEnemyContact)
                 return;
 
             if (Input.GetMouseButtonDown(0))
@@ -63,7 +71,19 @@ namespace Player
             if (!_isGameStarted)
                 return;
 
-            _rb.velocity = new Vector3(0, 0, _speed);
+            _rb.velocity = new Vector3(0, 0, _currentSpeed);
+        }
+
+        private void EnemyMovementStarted(object[] obj)
+        {
+            _currentSpeed = 1;
+            _isEnemyContact = true;
+        }
+
+        private void EnemyMovementended(object[] obj)
+        {
+            _currentSpeed = _speed;
+            _isEnemyContact = false;
         }
     }
 }

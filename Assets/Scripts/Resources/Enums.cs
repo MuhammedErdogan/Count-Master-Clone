@@ -13,10 +13,13 @@ public enum EventKeys
     Buttonclicked,
 
     OnGateContactEnter,
-    OnEnemyContact,
+    PlayerOnEnemyContact,
+    EnemyContactEnded,
 
     OnPlayerUnitSpawned,
     OnPlayerUnitDestroyed,
+
+    OnPlayerUnitHit
 }
 
 public enum GameState
