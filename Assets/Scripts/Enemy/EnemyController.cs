@@ -1,6 +1,8 @@
 using DG.Tweening;
 using Interface;
 using Manager;
+using Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +16,8 @@ namespace Enemy
         [SerializeField] private int _enemyCount = 10;
         [SerializeField] private EnemyUnit _enemyUnitPrefab;
         [SerializeField] private List<EnemyUnit> _units = new List<EnemyUnit>();
+
+        private Action AttackAction;
 
         private void OnEnable()
         {
@@ -29,6 +33,11 @@ namespace Enemy
             EventManager.StopListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
         }
 
+        private void Update()
+        {
+            AttackAction?.Invoke();
+        }
+
         private void Init(object[] obj)
         {
             for (int i = 0; i < _enemyCount; i++)
@@ -37,13 +46,24 @@ namespace Enemy
                 _units.Add(unit);
             }
 
-            _enemyZoneIndicator.transform.localScale = (_enemyCount / 20) * Vector3.one;
+            //_enemyZoneIndicator.transform.localScale = Mathf.Sqrt(_enemyCount * .025f) * Vector3.one;
 
             ReformatUnits();
         }
 
         private void OnAttack(object[] obj)
         {
+            GameObject go = (GameObject)obj[0];
+            var pos = go.transform.position;
+            AttackAction = () =>
+            {
+                for (int i = 0; i < _units.Count; i++)
+                {
+                    EnemyUnit unit = _units[i];
+                    var playerUnits = go.GetComponent<PlayerController>().PlayerUnits;
+                    unit.MoveToPlayer(pos, playerUnits[playerUnits.Count - 1].transform.position);
+                }
+            };
             for (int i = 0; i < _units.Count; i++)
             {
                 EnemyUnit unit = _units[i];
@@ -62,13 +82,16 @@ namespace Enemy
 
         private void RemoveUnit(object[] obj)
         {
-            var unit = (EnemyUnit)obj[0];
+            var col = obj[0] as Collider;
+            var unit = col.GetComponent<EnemyUnit>();
+
             if (!_units.Contains(unit))
             {
                 return;
             }
 
             _units.Remove(unit);
+            Destroy(unit.gameObject);
 
             if (_units.Count == 0)
             {
@@ -96,12 +119,13 @@ namespace Enemy
                 var NewPos = new Vector3(x, 0, z);
 
                 _units[i - 1].transform.localPosition = NewPos;
+                _units[i - 1].transform.localRotation = Quaternion.Euler(0, 180, 0);
             }
         }
 
         public void OnContactEnter(GameObject other, Vector3 point)
         {
-            EventManager.TriggerEvent(EventKeys.PlayerOnEnemyContact, new object[] { other, this });
+            EventManager.TriggerEvent(EventKeys.PlayerOnEnemyContact, new object[] { other, this, _units });
         }
 
         public void OnContactExit(GameObject other, Vector3 point)

@@ -16,9 +16,7 @@ public enum EventKeys
     PlayerOnEnemyContact,
     EnemyContactEnded,
 
-    OnPlayerUnitSpawned,
-    OnPlayerUnitDestroyed,
-
+    OnPlayerUnitCountChange,
     OnPlayerUnitHit
 }
 

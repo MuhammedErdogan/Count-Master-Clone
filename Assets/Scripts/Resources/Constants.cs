@@ -2,7 +2,7 @@ public static class Constants
 {
     public static class Tags
     {
-
+        public const string RAMP = "Ramp";
     }
 
     public static class Layers

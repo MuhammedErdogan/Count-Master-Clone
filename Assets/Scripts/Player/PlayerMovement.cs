@@ -76,7 +76,7 @@ namespace Player
 
         private void EnemyMovementStarted(object[] obj)
         {
-            _currentSpeed = 1;
+            _currentSpeed = 1f;
             _isEnemyContact = true;
         }
 

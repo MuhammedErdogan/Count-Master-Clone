@@ -33,6 +33,7 @@ namespace Player
         #endregion
 
         #region Action
+        public Action EnemyAction;
         #endregion
 
         private void Awake()
@@ -40,22 +41,27 @@ namespace Player
             Instance = this;
         }
 
+        private void Update()
+        {
+            EnemyAction?.Invoke();
+        }
+
         private void OnEnable()
         {
             EventManager.StartListening(EventKeys.OnGameStarted, Init);
-            EventManager.StartListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
-            EventManager.StartListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
             EventManager.StartListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
+            EventManager.StartListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
             EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
+            EventManager.StartListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventKeys.OnGameStarted, Init);
-            EventManager.StopListening(EventKeys.OnPlayerUnitSpawned, AddUnit);
-            EventManager.StopListening(EventKeys.OnPlayerUnitDestroyed, RemoveUnit);
             EventManager.StopListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
             EventManager.StopListening(EventKeys.OnGateContactEnter, GateAnalyser);
+            EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
+            EventManager.StopListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
         }
 
         private void Init(object[] objects)
@@ -108,29 +114,17 @@ namespace Player
             ReformatUnits();
         }
 
-        private void AddUnit(object[] objects)
-        {
-            PlayerUnit playerUnit = objects[0] as PlayerUnit;
-            if (playerUnit == null)
-            {
-                Debug.LogError("PlayerUnit is null");
-                return;
-            }
-            _units.Add(playerUnit);
-            ReformatUnits();
-        }
-
         private void RemoveUnit(int count)
         {
-            if (_units.Count == 0)
+            if (_units.Count == 0 || _units == null)
             {
-                Debug.LogError("PlayerUnits is empty");
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { 0 });
                 return;
             }
 
             if (_units.Count < count)
             {
-                Debug.LogError("PlayerUnits count is less than count");
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { 0 });
                 _units.Clear();
                 return;
             }
@@ -142,35 +136,38 @@ namespace Player
 
             for (var i = unitsWillBeDestroyed.Count - 1; i >= 0; i--)
             {
-                PlayerUnit unit = unitsWillBeDestroyed[i];
+                var unit = unitsWillBeDestroyed[i];
                 unit.DestroyUnit();
             }
+
+            EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
 
             ReformatUnits();
         }
 
         private void RemoveUnit(object[] objects)
         {
-            PlayerUnit playerUnit = objects[0] as PlayerUnit;
-            if (playerUnit == null || _units.Count == 0)
+            var unit = objects[1] as PlayerUnit;
+            if (unit == null || _units.Count == 0)
             {
-                Debug.LogError("PlayerUnit is null or playerUnits is empty");
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { 0 });
                 return;
             }
 
-            if (!_units.Contains(playerUnit))
+            if (!_units.Contains(unit))
             {
-                Debug.LogError("PlayerUnit is not in playerUnits");
+                Debug.LogError("Unit is not in playerUnits");
                 return;
             }
 
-            _units.Remove(playerUnit);
-            ReformatUnits();
+            EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
+
+            unit.DestroyUnit();
+            _units.Remove(unit);
         }
 
         private void ReformatUnits()
         {
-            Debug.Log($"ReformatUnits count: {_units.Count}");
             if (_units.Count == 1)
             {
                 _units[0].transform.DOLocalMove(Vector3.zero, 0.5f).SetEase(Ease.OutBack);
@@ -185,10 +182,12 @@ namespace Player
                 var NewPos = new Vector3(x, 0, z);
 
                 _units[i].transform.DOLocalMove(NewPos, 0.75f).SetEase(Ease.OutBack);
+                _units[i].transform.DORotate(new Vector3(0, 0, 0), 0.75f).SetEase(Ease.OutBack);
             }
+
         }
 
-        private void EnemyContact(object[] objects)
+        private void EnemyContact(object[] obj)
         {
             _state = PlayerState.Attack;
 
@@ -197,12 +196,33 @@ namespace Player
                 _units[i].ChangeState(_state);
             }
 
+            _units.Reverse();
 
+            var enemyUnitList = obj[2] as List<EnemyUnit>;
+            EnemyAction = () =>
+            {
+                if (_units.Count == 0)
+                {
+                    EnemyAction = null;
+                    return;
+                }
+
+                Debug.Log(enemyUnitList[0].transform.position);
+
+                for (int i = 0; i < _units.Count; i++)
+                {
+                    _units[i].MoveToEnemy(enemyUnitList[0].transform.position);
+                }
+            };
         }
 
-        private void MoveUnitsCloserToEnemy()
+        private void EnemyContactEnded(object[] obj)
         {
+            EnemyAction = null;
+            _state = PlayerState.Run;
 
+            ReformatUnits();
+            _units.Reverse();
         }
 
         private void MakeHumanTower()
