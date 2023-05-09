@@ -3,15 +3,17 @@ public static class Constants
     public static class Tags
     {
         public const string RAMP = "Ramp";
+        public const string FINISH = "Finish";
     }
 
     public static class Layers
     {
-        public const string Player = "Player";
-        public const string Enemy = "Enemy";
-        public const string Ground = "Ground";
-        public const string Obstacle = "Obstacle";
-        public const string Projectile = "Projectile";
+        public const string PLAYER = "Player";
+        public const string ENEMY = "Enemy";
+        public const string GROUND = "Ground";
+        public const string OBSTACLE = "Obstacle";
+        public const string PROJECTILE = "Projectile";
+        public const string STAIR = "Stair";
     }
 
     public static class Scenes
@@ -22,7 +24,7 @@ public static class Constants
 
     public static class LayerIndexes
     {
-
+        public const int STAIR = 11;
     }
 
     public static class Animations

@@ -14,12 +14,12 @@ namespace Player
 
         private void OnEnable()
         {
-
+            EventManager.StartListening(EventKeys.FinishTriggered, ForwardCheck);
         }
 
         private void OnDisable()
         {
-
+            EventManager.StopListening(EventKeys.FinishTriggered, ForwardCheck);
         }
 
         public void Init(PlayerState state)
@@ -62,8 +62,7 @@ namespace Player
             }
 
             Vector3 refPos = new Vector3(enemyPos.x, transform.position.y, enemyPos.z);
-            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(distance.magnitude/2, .25f, 2));
-            //transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime / Mathf.Clamp(distance.magnitude, .5f, 2));
+            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(0.75f / distance.magnitude, .25f, 2));
 
             var enemyDirection = refPos - transform.position;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(enemyDirection), 3f * Time.deltaTime);
@@ -71,23 +70,42 @@ namespace Player
 
         public void DestroyUnit()
         {
-            //TO DO destroy unit with animation
             gameObject.SetActive(false);
+            transform.SetParent(PoolManager.Instance.transform);
         }
 
         private void Jump()
         {
-            if(_isJumping)
+            if (_isJumping)
             {
                 return;
             }
 
             var startPosition = transform.localPosition;
             _isJumping = true;
-            transform.DOLocalJump(new Vector3(startPosition.x, 0, startPosition.z), 1.25f, 1, 1f).OnComplete(() =>
+            transform.DOLocalJump(new Vector3(startPosition.x, 0, startPosition.z), 1.35f, 1, 1f).OnComplete(() =>
             {
                 _isJumping = false;
             });
+        }
+
+        private void ForwardCheck(object[] obj)
+        {
+            StartCoroutine(ForwardCheckCroutine());
+        }
+
+
+        private IEnumerator ForwardCheckCroutine()
+        {
+            while (true)
+            {
+                var ray = new Ray(transform.position, transform.forward);
+                if (Physics.Raycast(ray, out _, .5f, 1 << Constants.LayerIndexes.STAIR))
+                {
+                    transform.parent.SetParent(null);
+                }
+                yield return 0;
+            }
         }
 
         private void OnTriggerEnter(Collider other)

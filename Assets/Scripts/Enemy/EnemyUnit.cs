@@ -37,7 +37,7 @@ public class EnemyUnit : MonoBehaviour, IContactable
         }
 
         Vector3 refPos = new Vector3(playerPos.x, transform.position.y, playerPos.z);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(playerUnitPos.x, transform.position.y, playerUnitPos.z), Time.deltaTime * Mathf.Clamp(distance.magnitude / 2, .25f, 2));
+        transform.position = Vector3.Lerp(transform.position, new Vector3(playerUnitPos.x, transform.position.y, playerUnitPos.z), Time.deltaTime * Mathf.Clamp(1.25f / distance.magnitude, .25f, 2));
 
         var playerDirection = refPos - transform.position;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerDirection), 3f * Time.deltaTime);

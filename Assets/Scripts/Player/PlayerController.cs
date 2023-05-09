@@ -53,6 +53,7 @@ namespace Player
             EventManager.StartListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
             EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
             EventManager.StartListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
+            EventManager.StartListening(EventKeys.FinishTriggered, MakeHumanTower);
         }
 
         private void OnDisable()
@@ -62,6 +63,7 @@ namespace Player
             EventManager.StopListening(EventKeys.OnGateContactEnter, GateAnalyser);
             EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
             EventManager.StopListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
+            EventManager.StopListening(EventKeys.FinishTriggered, MakeHumanTower);
         }
 
         private void Init(object[] objects)
@@ -106,6 +108,7 @@ namespace Player
             {
                 var unit = PoolManager.Instance.SpawnFromPool(PoolType.PlayerUnit, transform.position, Quaternion.identity);
                 unit.transform.SetParent(transform);
+                unit.name = $"PlayerUnit_{_units.Count}";
                 PlayerUnit unitComponent = unit.GetComponent<PlayerUnit>();
                 unitComponent.Init(_state);
                 _units.Add(unitComponent);
@@ -196,7 +199,7 @@ namespace Player
                 _units[i].ChangeState(_state);
             }
 
-            _units.Reverse();
+            //_units.Reverse();
 
             var enemyUnitList = obj[2] as List<EnemyUnit>;
             EnemyAction = () =>
@@ -206,8 +209,6 @@ namespace Player
                     EnemyAction = null;
                     return;
                 }
-
-                Debug.Log(enemyUnitList[0].transform.position);
 
                 for (int i = 0; i < _units.Count; i++)
                 {
@@ -222,12 +223,14 @@ namespace Player
             _state = PlayerState.Run;
 
             ReformatUnits();
-            _units.Reverse();
+            //_units.Reverse();
         }
 
-        private void MakeHumanTower()
+        private void MakeHumanTower(object[] obj)
         {
-
+            Debug.Log("MakeHumanTower");
+            var tower = gameObject.GetComponent<HumanTower>();
+            tower.MakeTower(_units.Count);
         }
     }
 }

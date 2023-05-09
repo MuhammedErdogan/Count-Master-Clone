@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Interface;
+using Manager;
 
 namespace Player
 {
@@ -12,6 +13,12 @@ namespace Player
     {
         private void OnTriggerEnter(Collider other)
         {
+            if (other.CompareTag(Constants.Tags.FINISH))
+            {
+                EventManager.TriggerEvent(EventKeys.FinishTriggered);
+                return;
+            }
+
             if (!other.TryGetComponent(out IContactable contactable))
             {
                 return;
