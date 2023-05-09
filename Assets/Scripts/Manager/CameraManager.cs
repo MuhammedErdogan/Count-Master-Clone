@@ -13,10 +13,6 @@ namespace Manager
         private DynamicCameras activeCam, lastActiveCam;
         private CinemachineBrain brain;
         private Coroutine shakeRoutine;
-        private float lastY;
-        private bool isUpdateOnY;
-        private Coroutine updateOnYRoutine, stopOnYRoutine;
-        private float m_Tx = -.2f, m_Ty = 3.5f;
         #endregion
 
         public DynamicCameras GetActiveCam => activeCam;
@@ -33,10 +29,8 @@ namespace Manager
                 SetPriorityTo(CamerasType.Follow_CAM);
             });
 
-            EventManager.StartListening(EventKeys.FinishTriggered, _ =>
-            {
-                SetPriorityTo(CamerasType.Finish_CAM);
-            });
+            EventManager.StartListening(EventKeys.FinishTriggered, OnFinish);
+            EventManager.StartListening(EventKeys.TowerCompleted, SetTargetToActiveCam);
         }
 
         private void OnDisable()
@@ -46,17 +40,15 @@ namespace Manager
                 SetPriorityTo(CamerasType.Follow_CAM);
             });
 
-            EventManager.StopListening(EventKeys.FinishTriggered, _ =>
-            {
-                SetPriorityTo(CamerasType.Finish_CAM);
-            });
+            EventManager.StopListening(EventKeys.FinishTriggered, OnFinish);
+            EventManager.StopListening(EventKeys.TowerCompleted, SetTargetToActiveCam);
         }
 
         public void Init()
         {
             dynamicCameras = FindObjectsOfType<DynamicCameras>();
 
-            activeCam = GetCamera(CamerasType.Start_CAM);
+            activeCam = GetCamera(CamerasType.Follow_CAM);
 
             Camera mainCamera = Camera.main;
             foreach (DynamicCameras dynamicCamera in dynamicCameras)
@@ -71,9 +63,17 @@ namespace Manager
             }
 
             brain = GetComponent<CinemachineBrain>();
-            Vector3 m_TrackedObjectOffset = GetActiveCam.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>().m_TrackedObjectOffset;
-            m_Tx = m_TrackedObjectOffset.x;
-            m_Ty = m_TrackedObjectOffset.y;
+        }
+
+
+        private void OnFinish(object[] obj)
+        {
+            SetPriorityTo(CamerasType.Finish_CAM);
+
+            this.DelayedAction(2f, () =>
+            {
+                SetPriorityTo(CamerasType.Finish_CAM_2);
+            }, out _);
         }
 
         private void SetPriorityTo(CamerasType cameraType)
@@ -82,6 +82,17 @@ namespace Manager
             activeCam.ResetPriority();
             activeCam = GetCamera(cameraType);
             activeCam.SetPriority();
+        }
+
+        private void SetTargetToActiveCam(object[] obj)
+        {
+            Transform target = obj[0] as Transform;
+
+            var vcam = GetCamera(CamerasType.Finish_CAM_2).GetComponent<CinemachineVirtualCamera>();
+
+            vcam.Follow = target;
+            vcam.LookAt = target;
+            vcam.transform.position = Vector3.zero;
         }
 
         private void BackLastActiveCam()

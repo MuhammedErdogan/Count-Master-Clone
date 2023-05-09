@@ -12,7 +12,6 @@ namespace Player
         public float _swerveAmount = 0.5f;
         public float _swerveSpeed = 5.0f;
         public float _smoothTime = 0.1f;
-        private Rigidbody _rb;
         private Vector3 _startPosition;
         private float _screenWidth;
         private bool _isGameStarted = false;
@@ -23,7 +22,6 @@ namespace Player
 
         void Start()
         {
-            _rb = GetComponent<Rigidbody>();
             _screenWidth = Screen.width;
         }
 
@@ -62,7 +60,7 @@ namespace Player
                 float targetPositionX = Mathf.Clamp(transform.position.x + movementDirection, -_swerveAmount, _swerveAmount);
                 float smoothPositionX = Mathf.SmoothDamp(transform.position.x, targetPositionX, ref _currentVelocity, _smoothTime, _swerveSpeed);
                 Vector3 newPosition = new Vector3(smoothPositionX, transform.position.y, transform.position.z);
-                _rb.MovePosition(newPosition);
+                transform.position = newPosition;
             }
         }
 
@@ -71,12 +69,13 @@ namespace Player
             if (!_isGameStarted)
                 return;
 
-            _rb.velocity = new Vector3(0, 0, _currentSpeed);
+            Vector3 forwardMovement = new Vector3(0, 0, _currentSpeed) * Time.deltaTime;
+            transform.position += forwardMovement;
         }
 
         private void EnemyMovementStarted(object[] obj)
         {
-            _currentSpeed = .5f;
+            _currentSpeed = .25f;
             _isEnemyContact = true;
         }
 

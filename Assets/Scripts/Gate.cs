@@ -14,12 +14,12 @@ public class Gate : MonoBehaviour, IContactable
 
     private void OnEnable()
     {
-        EventManager.StartListening(EventKeys.OnGameStarted, Init);
+        EventManager.StartListening(EventKeys.LevelLoaded, Init);
     }
 
     private void OnDisable()
     {
-        EventManager.StopListening(EventKeys.OnGameStarted, Init);
+        EventManager.StopListening(EventKeys.LevelLoaded, Init);
     }
 
     private void Init(object[] objects)

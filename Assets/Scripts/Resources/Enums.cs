@@ -21,6 +21,7 @@ public enum EventKeys : uint
     OnPlayerUnitHit,
 
     FinishTriggered,
+    TowerCompleted,
 }
 
 public enum GameState : byte
@@ -97,6 +98,7 @@ public enum CamerasType : byte
     Start_CAM = 5,
     Follow_CAM = 10,
     Finish_CAM = 15,
+    Finish_CAM_2 = 20,
 }
 
 public enum FinishType : byte

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Manager;
 using UnityEngine;
 
 
@@ -106,10 +107,11 @@ namespace Player
         {
             float tempTowerHumanCount = 0;
             var towerNewPos = Vector3.zero;
+            Transform child = transform.GetChild(0);
 
             for (int i = 1; i < transform.childCount; i++)
             {
-                Transform child = transform.GetChild(i);
+                child = transform.GetChild(i);
                 child.transform.parent = tower.transform;
                 child.transform.localPosition = new Vector3(tempTowerHumanCount * xGap, 0, 0);
                 child.eulerAngles = Vector3.zero;
@@ -124,7 +126,9 @@ namespace Player
             }
 
             tower.transform.position = new Vector3(-towerNewPos.x / towerHumanCount, tower.transform.position.y - yOffset, tower.transform.position.z);
+            EventManager.TriggerEvent(EventKeys.TowerCompleted, new object[] { child });
         }
+
     }
 }
 

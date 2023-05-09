@@ -121,25 +121,27 @@ namespace Player
 
         private void DownCheck()
         {
-            if (!Physics.Raycast(transform.position + new Vector3(0, .5f, 0), Vector3.down, out RaycastHit hit, 5f, 1 << Constants.LayerIndexes.PLATFORM))
+            if (Physics.Raycast(transform.position + new Vector3(0, .75f, 0), Vector3.down, out RaycastHit hit, 5f, 1 << Constants.LayerIndexes.PLATFORM))
             {
                 if (hit.collider.CompareTag(Constants.Tags.RAMP))
                 {
-                    if (!_isJumping) Jump();
+                    if (_isJumping) return;
 
-                    return;
+                    Jump();
                 }
 
-                EventManager.TriggerEvent(EventKeys.OnPlayerUnitFall, new object[] { this });
-                this.DelayedAction(1.5f, () =>
-                {
-                    DestroyUnit();
-                }, out _);
-
-                transform.SetParent(null);
-                Actions -= DownCheck;
-                Actions += Fall;
+                return;
             }
+
+            EventManager.TriggerEvent(EventKeys.OnPlayerUnitFall, new object[] { this });
+            this.DelayedAction(1.5f, () =>
+            {
+                DestroyUnit();
+            }, out _);
+
+            transform.SetParent(null);
+            Actions -= DownCheck;
+            Actions += Fall;
         }
 
         private IEnumerator ForwardCheckCroutine()

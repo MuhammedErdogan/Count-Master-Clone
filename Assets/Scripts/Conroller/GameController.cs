@@ -9,14 +9,14 @@ public class GameController : MonoBehaviour
     {
         EventManager.StartListening(EventKeys.OnGameStarted, Init);
         EventManager.StartListening(EventKeys.OnPlayerUnitCountChange, OnPlayerUnitDestroyed);
-        EventManager.StartListening(EventKeys.FinishTriggered, OnLevelCompleted);
+        EventManager.StartListening(EventKeys.TowerCompleted, OnLevelCompleted);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EventKeys.OnGameStarted, Init);
         EventManager.StopListening(EventKeys.OnPlayerUnitCountChange, OnPlayerUnitDestroyed);
-        EventManager.StopListening(EventKeys.FinishTriggered, OnLevelCompleted);
+        EventManager.StopListening(EventKeys.TowerCompleted, OnLevelCompleted);
     }
 
     private void Init(object[] obj)
@@ -30,6 +30,7 @@ public class GameController : MonoBehaviour
         if (count == 0)
         {
             EventManager.TriggerEvent(EventKeys.LevelFailed, null);
+            Time.timeScale = 0;
         }
     }
 
