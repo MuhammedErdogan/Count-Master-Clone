@@ -56,8 +56,10 @@ namespace Enemy
             {
                 for (int i = 0; i < _units.Count; i++)
                 {
-                    EnemyUnit unit = _units[i];
                     var playerUnits = go.GetComponent<PlayerController>().PlayerUnits;
+                    if (playerUnits.Count == 0) return;
+
+                    EnemyUnit unit = _units[i];
                     unit.MoveToPlayer(pos, playerUnits[playerUnits.Count - 1].transform.position);
                 }
             };

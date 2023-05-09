@@ -1,4 +1,4 @@
-public enum EventKeys
+public enum EventKeys : uint
 {
     OnGameStarted,
     OnGameEnded,
@@ -23,7 +23,7 @@ public enum EventKeys
     FinishTriggered,
 }
 
-public enum GameState
+public enum GameState : byte
 {
     Start,
     Playing,
@@ -32,7 +32,7 @@ public enum GameState
     Victory,
 }
 
-public enum PoolType
+public enum PoolType : byte
 {
     PlayerUnit,
     EnemyUnit,
@@ -40,27 +40,27 @@ public enum PoolType
     EnemyUnitProjectile,
 }
 
-public enum ParticleType
+public enum ParticleType : byte
 {
     PlayerUnitAdd,
     PlayerUnitBlood,
 }
 
-public enum PlayerUnitType
+public enum PlayerUnitType : byte
 {
     Melee,
     Ranged,
     Magic,
 }
 
-public enum EnemyType
+public enum EnemyType : byte
 {
     Melee,
     Ranged,
     Magic,
 }
 
-public enum EnemyState
+public enum EnemyState : byte
 {
     Idle,
     Chase,
@@ -68,14 +68,14 @@ public enum EnemyState
     Dead,
 }
 
-public enum PlayerState
+public enum PlayerState : byte
 {
     Idle,
     Run,
     Attack,
 }
 
-public enum Operations
+public enum Operations : byte
 {
     Add,
     Subtract,
@@ -83,10 +83,17 @@ public enum Operations
     Divide,
 }
 
-public enum ButtonType
+public enum ButtonType : byte
 {
     Play,
     Pause,
     Resume,
     Restart,
+}
+
+public enum CamerasType : byte
+{
+    Start_CAM = 5,
+    Follow_CAM = 10,
+    Finish_CAM = 15,
 }
