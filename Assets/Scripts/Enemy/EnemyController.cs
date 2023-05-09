@@ -21,15 +21,13 @@ namespace Enemy
 
         private void OnEnable()
         {
-            EventManager.StartListening(EventKeys.OnGameStarted, Init);
+            EventManager.StartListening(EventKeys.LevelLoaded, Init);
             EventManager.StartListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
-            EventManager.StartListening(EventKeys.PlayerOnEnemyContact, OnAttack);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening(EventKeys.OnGameStarted, Init);
-            EventManager.StopListening(EventKeys.PlayerOnEnemyContact, OnAttack);
+            EventManager.StopListening(EventKeys.LevelLoaded, Init);
             EventManager.StopListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
         }
 
@@ -48,15 +46,14 @@ namespace Enemy
             ReformatUnits();
         }
 
-        private void OnAttack(object[] obj)
+        private void StartAttack(GameObject player)
         {
-            GameObject go = (GameObject)obj[0];
-            var pos = go.transform.position;
+            var pos = player.transform.position;
             AttackAction = () =>
             {
                 for (int i = 0; i < _units.Count; i++)
                 {
-                    var playerUnits = go.GetComponent<PlayerController>().PlayerUnits;
+                    var playerUnits = player.GetComponent<PlayerController>().PlayerUnits;
                     if (playerUnits.Count == 0) return;
 
                     EnemyUnit unit = _units[i];
@@ -125,6 +122,7 @@ namespace Enemy
         public void OnContactEnter(GameObject other, Vector3 point)
         {
             EventManager.TriggerEvent(EventKeys.PlayerOnEnemyContact, new object[] { other, this, _units });
+            StartAttack(other);
         }
 
         public void OnContactExit(GameObject other, Vector3 point)

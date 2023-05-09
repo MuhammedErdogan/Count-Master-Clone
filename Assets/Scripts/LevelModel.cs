@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class LevelModel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    #region Variables
+    [SerializeField] private Transform _playerStartPos;
+    [SerializeField] private FinishType _finishType;
+    #endregion
+
+    #region Properties
+    public Transform PlayerStartPos => _playerStartPos;
+    public FinishType FinishType => _finishType;
+    #endregion
+
+    public void SetupLevel()
     {
-        
+        gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CloseLevel()
     {
-        
+        gameObject.SetActive(false);
     }
 }

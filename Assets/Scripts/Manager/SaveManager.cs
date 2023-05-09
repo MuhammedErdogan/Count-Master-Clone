@@ -18,6 +18,8 @@ namespace Manager
 
         public const string KEY_TOTAL_PLAY_COUNT = "KEY_TOTAL_PLAY_COUNT";
 
+        public const string KEY_LEVEL_INDEX = "KEY_LEVEL_INDEX";
+
         #endregion
 
         public static void Init()

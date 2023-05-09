@@ -112,6 +112,7 @@ namespace Player
                 Transform child = transform.GetChild(i);
                 child.transform.parent = tower.transform;
                 child.transform.localPosition = new Vector3(tempTowerHumanCount * xGap, 0, 0);
+                child.eulerAngles = Vector3.zero;
                 towerNewPos += child.transform.position;
                 tempTowerHumanCount++;
                 i--;

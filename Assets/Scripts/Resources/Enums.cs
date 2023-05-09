@@ -89,6 +89,7 @@ public enum ButtonType : byte
     Pause,
     Resume,
     Restart,
+    NextLevel,
 }
 
 public enum CamerasType : byte
@@ -96,4 +97,11 @@ public enum CamerasType : byte
     Start_CAM = 5,
     Follow_CAM = 10,
     Finish_CAM = 15,
+}
+
+public enum FinishType : byte
+{
+    HumanTower,
+    KickBoks,
+    Archery,
 }

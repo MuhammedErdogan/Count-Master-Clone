@@ -52,7 +52,7 @@ namespace Player
 
         private void OnEnable()
         {
-            EventManager.StartListening(EventKeys.OnGameStarted, Init);
+            EventManager.StartListening(EventKeys.LevelLoaded, Init);
             EventManager.StartListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
             EventManager.StartListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
             EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
@@ -63,7 +63,7 @@ namespace Player
 
         private void OnDisable()
         {
-            EventManager.StopListening(EventKeys.OnGameStarted, Init);
+            EventManager.StopListening(EventKeys.LevelLoaded, Init);
             EventManager.StopListening(EventKeys.PlayerOnEnemyContact, EnemyContact);
             EventManager.StopListening(EventKeys.OnGateContactEnter, GateAnalyser);
             EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
@@ -74,8 +74,20 @@ namespace Player
 
         private void Init(object[] objects)
         {
-            Debug.Log("PlayerController Init");
+            var startPos = objects[1] as Transform;
+            transform.position = startPos.position;
             _state = PlayerState.Run;
+
+            for (int i = 0; i < _units.Count; i++)
+            {
+                _units[i].DestroyUnit();
+            }
+
+            _units.Clear();
+            AddUnit(1);
+
+            UpdateCountText(_units.Count);
+
             for (int i = 0; i < _units.Count; i++)
             {
                 _units[i].Init(_state);

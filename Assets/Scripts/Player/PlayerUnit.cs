@@ -70,13 +70,10 @@ namespace Player
         public void MoveToEnemy(Vector3 enemyPos)
         {
             var distance = transform.position - enemyPos;
-            if (distance.magnitude < .75f)
-            {
-                return;
-            }
+            if (distance.magnitude < .75f) return;
 
             Vector3 refPos = new Vector3(enemyPos.x, transform.position.y, enemyPos.z);
-            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(0.75f / distance.magnitude, .25f, 2));
+            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(0.75f / distance.magnitude, .2f, 2));
 
             var enemyDirection = refPos - transform.position;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(enemyDirection), 3f * Time.deltaTime);
@@ -90,10 +87,7 @@ namespace Player
 
         private void Jump(float force = 1.4f)
         {
-            if (_isJumping)
-            {
-                return;
-            }
+            if (_isJumping) return;
 
             var startPosition = transform.localPosition;
             _isJumping = true;
@@ -127,8 +121,15 @@ namespace Player
 
         private void DownCheck()
         {
-            if (!Physics.Raycast(transform.position, Vector3.down, out _, .5f, 1 << Constants.LayerIndexes.PLATFORM))
+            if (!Physics.Raycast(transform.position + new Vector3(0, .5f, 0), Vector3.down, out RaycastHit hit, 5f, 1 << Constants.LayerIndexes.PLATFORM))
             {
+                if (hit.collider.CompareTag(Constants.Tags.RAMP))
+                {
+                    if (!_isJumping) Jump();
+
+                    return;
+                }
+
                 EventManager.TriggerEvent(EventKeys.OnPlayerUnitFall, new object[] { this });
                 this.DelayedAction(1.5f, () =>
                 {
@@ -156,12 +157,6 @@ namespace Player
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(Constants.Tags.RAMP))
-            {
-                Jump();
-                return;
-            }
-
             if (other.TryGetComponent(out IContactable contactable))
             {
                 contactable.OnContactEnter(gameObject, other.ClosestPoint(transform.position));

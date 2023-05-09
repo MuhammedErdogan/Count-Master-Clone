@@ -1,78 +1,73 @@
-using Manager;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using Manager;
 
 public class LevelManager : MonoBehaviour
 {
-    #region Variables
-    [SerializeField] private List<GameObject> levels = new List<GameObject>();
+    [SerializeField] private List<LevelModel> levels;
     [SerializeField] private Transform levelParents;
-    private int selectedIndex, currentLevel;
-    #endregion
 
-    #region Components
-    #endregion
+    private LevelModel _activeLevel;
+    private int _currentLevel;
 
     private void Awake()
     {
-        currentLevel = PlayerPrefs.GetInt("LevelIndex", 0);
-        selectedIndex = PlayerPrefs.GetInt("LastPlayedIndex", 0);
+        _currentLevel = SaveManager.LoadInt(SaveManager.KEY_LEVEL_INDEX);
+
+        for (int i = levels.Count - 1; i >= 0; i--)
+        {
+            levels[i].CloseLevel();
+        }
+
+        _activeLevel = levels[GetLevelIndex()];
+        _activeLevel.SetupLevel();
     }
 
     private void OnEnable()
     {
-        //EventManager.StartListening(EventKeys.OnPlayButtonClicked, GenerateLevel);
-        //EventManager.StartListening(EventKeys.OnHomeReturned, DestroyLevels);
+        EventManager.StartListening(EventKeys.OnGameStarted, LoadLevel);
+        EventManager.StartListening(EventKeys.LevelCompleted, NextLevel);
     }
 
     private void OnDisable()
     {
-        //EventManager.StopListening(EventKeys.OnPlayButtonClicked, GenerateLevel);
-        //EventManager.StopListening(EventKeys.OnHomeReturned, DestroyLevels);
+        EventManager.StopListening(EventKeys.OnGameStarted, LoadLevel);
+        EventManager.StopListening(EventKeys.LevelCompleted, NextLevel);
     }
 
-    private void GenerateLevel(object[] obj = null)
+    private void LoadLevel(object[] obj = null)
     {
-        DestroyLevels();
-        //var levelScript = Instantiate(levels[selectedIndex], levelParents).GetComponent<LevelModel>();
-        //EventManager.TriggerEvent(EventKeys.OnLevelCreated, new object[] { levelScript.GetStartSkateBoard, levelScript.GetStartPos, currentLevel });
-        PlayerPrefs.SetInt("LevelIndex", currentLevel);
-        PlayerPrefs.SetInt("LastPlayedIndex", selectedIndex);
-    }
-
-    private void DestroyLevels(object[] obj = null)
-    {
-        int childCount = levelParents.childCount;
-        for (int i = 0; i < childCount; i++)
+        int index = GetLevelIndex();
+        if(_activeLevel != null)
         {
-            Destroy(levelParents.GetChild(0).gameObject);
+            _activeLevel.gameObject.SetActive(false);
         }
+
+        _activeLevel = levels[index];
+        _activeLevel.SetupLevel();
+
+        EventManager.TriggerEvent(EventKeys.LevelLoaded, new object[] { _currentLevel, _activeLevel.PlayerStartPos });
+        SaveManager.SaveInt(SaveManager.KEY_LEVEL_INDEX, _currentLevel);
     }
 
-    public void PassToNextLevel()
+    public void NextLevel(object[] obj = null)
     {
-        currentLevel++;
-        SetLevelIndex();
-        GenerateLevel();
+        _currentLevel++;
+        GetLevelIndex();
+        LoadLevel();
     }
 
     public void ReplayThisLevel()
     {
-        GenerateLevel();
+        LoadLevel();
     }
 
-    private void SetLevelIndex()
+    private int GetLevelIndex()
     {
-        if (currentLevel < levels.Count)
+        if (_currentLevel < levels.Count)
         {
-            selectedIndex = currentLevel;
-            return;
+            return _currentLevel;
         }
-        var oldIndex = selectedIndex;
-        selectedIndex = Random.Range(0, levels.Count);
-        if (oldIndex == selectedIndex)
-        {
-            selectedIndex = (selectedIndex + 1) % levels.Count;
-        }
+        return Random.Range(0, levels.Count);
     }
 }

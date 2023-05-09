@@ -50,7 +50,7 @@ namespace Manager
                     ResumeGame();
                     break;
                 case ButtonType.Restart:
-                    RestarGame();
+                    RestartGame();
                     break;
                 case ButtonType.Pause:
                     PauseGame();
@@ -65,14 +65,9 @@ namespace Manager
             EventManager.TriggerEvent(EventKeys.OnGameStarted);
         }
 
-        private void RestarGame()
+        private void RestartGame()
         {
             EventManager.TriggerEvent(EventKeys.OnGameStarted);
-        }
-
-        private void EndGame()
-        {
-
         }
 
         private void PauseGame()
