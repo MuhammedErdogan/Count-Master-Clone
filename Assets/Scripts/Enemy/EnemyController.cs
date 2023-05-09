@@ -22,8 +22,8 @@ namespace Enemy
         private void OnEnable()
         {
             EventManager.StartListening(EventKeys.OnGameStarted, Init);
-            EventManager.StartListening(EventKeys.PlayerOnEnemyContact, OnAttack);
             EventManager.StartListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
+            EventManager.StartListening(EventKeys.PlayerOnEnemyContact, OnAttack);
         }
 
         private void OnDisable()
@@ -45,9 +45,6 @@ namespace Enemy
                 EnemyUnit unit = Instantiate(_enemyUnitPrefab, transform);
                 _units.Add(unit);
             }
-
-            //_enemyZoneIndicator.transform.localScale = Mathf.Sqrt(_enemyCount * .025f) * Vector3.one;
-
             ReformatUnits();
         }
 
@@ -82,7 +79,7 @@ namespace Enemy
 
         private void RemoveUnit(object[] obj)
         {
-            var col = obj[0] as Collider;
+            var col = obj[1] as Collider;
             var unit = col.GetComponent<EnemyUnit>();
 
             if (!_units.Contains(unit))

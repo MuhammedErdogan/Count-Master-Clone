@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Interface;
 using Manager;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,15 +12,28 @@ namespace Player
     {
         [SerializeField] private Animator _animator;
         private bool _isJumping = false;
+        private float _velocity = 0f; // initial velocity (m/s) for falling
+
+        private Action Actions;
 
         private void OnEnable()
         {
             EventManager.StartListening(EventKeys.FinishTriggered, ForwardCheck);
+            EventManager.StartListening(EventKeys.FinishTriggered, _ => Actions = null);
+
+            Actions += DownCheck;
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventKeys.FinishTriggered, ForwardCheck);
+            EventManager.StopListening(EventKeys.FinishTriggered, _ => Actions = null);
+            Actions -= DownCheck;
+        }
+
+        private void Update()
+        {
+            Actions?.Invoke();
         }
 
         public void Init(PlayerState state)
@@ -74,7 +88,7 @@ namespace Player
             transform.SetParent(PoolManager.Instance.transform);
         }
 
-        private void Jump()
+        private void Jump(float force = 1.4f)
         {
             if (_isJumping)
             {
@@ -83,10 +97,27 @@ namespace Player
 
             var startPosition = transform.localPosition;
             _isJumping = true;
-            transform.DOLocalJump(new Vector3(startPosition.x, 0, startPosition.z), 1.35f, 1, 1f).OnComplete(() =>
+            transform.DOLocalJump(new Vector3(startPosition.x, 0, startPosition.z), force, 1, 1f).OnComplete(() =>
             {
                 _isJumping = false;
             });
+        }
+
+        private void Fall()
+        {
+            if (_isJumping)
+            {
+                return;
+            }
+
+            _velocity += Constants.GameConstants.GRAVITY * Time.deltaTime;
+            transform.position += new Vector3(0, _velocity * Time.deltaTime, 0);
+
+            if (transform.position.y < 0)
+            {
+                transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+                _velocity = 0;
+            }
         }
 
         private void ForwardCheck(object[] obj)
@@ -94,6 +125,21 @@ namespace Player
             StartCoroutine(ForwardCheckCroutine());
         }
 
+        private void DownCheck()
+        {
+            if (!Physics.Raycast(transform.position, Vector3.down, out _, .5f, 1 << Constants.LayerIndexes.PLATFORM))
+            {
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitFall, new object[] { this });
+                this.DelayedAction(1.5f, () =>
+                {
+                    DestroyUnit();
+                }, out _);
+
+                transform.SetParent(null);
+                Actions -= DownCheck;
+                Actions += Fall;
+            }
+        }
 
         private IEnumerator ForwardCheckCroutine()
         {
@@ -119,7 +165,8 @@ namespace Player
             if (other.TryGetComponent(out IContactable contactable))
             {
                 contactable.OnContactEnter(gameObject, other.ClosestPoint(transform.position));
-                EventManager.TriggerEvent(EventKeys.OnPlayerUnitHit, new object[] { other, this });
+                EventManager.TriggerEvent(EventKeys.OnPlayerUnitHit, new object[] { this, other });
+                DestroyUnit();
             }
         }
     }

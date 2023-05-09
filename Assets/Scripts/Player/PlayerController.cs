@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UIElements;
+using TMPro;
 
 namespace Player
 {
@@ -15,6 +16,7 @@ namespace Player
         #endregion
 
         #region Components
+        [SerializeField] private TextMeshPro _scoreText;
         #endregion
 
         #region Variables
@@ -30,6 +32,8 @@ namespace Player
         #region Properties
         public float JumpForce => _jumpForce;
         public List<PlayerUnit> PlayerUnits => _units;
+        private void UpdateCountText(int count) => _scoreText.text = count.ToString();
+
         #endregion
 
         #region Action
@@ -54,6 +58,7 @@ namespace Player
             EventManager.StartListening(EventKeys.OnGateContactEnter, GateAnalyser);
             EventManager.StartListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
             EventManager.StartListening(EventKeys.FinishTriggered, MakeHumanTower);
+            EventManager.StartListening(EventKeys.OnPlayerUnitFall, RemoveUnit);
         }
 
         private void OnDisable()
@@ -64,6 +69,7 @@ namespace Player
             EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyContactEnded);
             EventManager.StopListening(EventKeys.OnPlayerUnitHit, RemoveUnit);
             EventManager.StopListening(EventKeys.FinishTriggered, MakeHumanTower);
+            EventManager.StopListening(EventKeys.OnPlayerUnitFall, RemoveUnit);
         }
 
         private void Init(object[] objects)
@@ -115,6 +121,8 @@ namespace Player
             }
 
             ReformatUnits();
+
+            UpdateCountText(_units.Count);
         }
 
         private void RemoveUnit(int count)
@@ -146,11 +154,13 @@ namespace Player
             EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
 
             ReformatUnits();
+
+            UpdateCountText(_units.Count);
         }
 
         private void RemoveUnit(object[] objects)
         {
-            var unit = objects[1] as PlayerUnit;
+            var unit = objects[0] as PlayerUnit;
             if (unit == null || _units.Count == 0)
             {
                 EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { 0 });
@@ -165,8 +175,9 @@ namespace Player
 
             EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
 
-            unit.DestroyUnit();
             _units.Remove(unit);
+
+            UpdateCountText(_units.Count);
         }
 
         private void ReformatUnits()
@@ -199,8 +210,6 @@ namespace Player
                 _units[i].ChangeState(_state);
             }
 
-            //_units.Reverse();
-
             var enemyUnitList = obj[2] as List<EnemyUnit>;
             EnemyAction = () =>
             {
@@ -223,12 +232,10 @@ namespace Player
             _state = PlayerState.Run;
 
             ReformatUnits();
-            //_units.Reverse();
         }
 
         private void MakeHumanTower(object[] obj)
         {
-            Debug.Log("MakeHumanTower");
             var tower = gameObject.GetComponent<HumanTower>();
             tower.MakeTower(_units.Count);
         }

@@ -24,6 +24,7 @@ public static class Constants
 
     public static class LayerIndexes
     {
+        public const int PLATFORM = 3;
         public const int STAIR = 11;
     }
 
@@ -32,5 +33,10 @@ public static class Constants
         public const string RUN = "Run";
         public const string Attack = "Attack";
         public const string Death = "Death";
+    }
+
+    public static class GameConstants
+    {
+        public const int GRAVITY = -10;
     }
 }
