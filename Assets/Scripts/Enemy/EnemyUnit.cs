@@ -1,4 +1,5 @@
 using Interface;
+using Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +32,7 @@ public class EnemyUnit : MonoBehaviour, IContactable
     public void MoveToPlayer(Vector3 playerPos, Vector3 playerUnitPos)
     {
         var distance = transform.position - playerPos;
-        if (distance.magnitude < .75f)
+        if (distance.magnitude < .5f)
         {
             return;
         }
@@ -46,8 +47,8 @@ public class EnemyUnit : MonoBehaviour, IContactable
 
     public void OnContactEnter(GameObject other, Vector3 point)
     {
-        Debug.Log("EnemyUnit OnContactEnter");
         gameObject.SetActive(false);
+        ParticleManager.Instance.InstantiateParticle(transform.position, Particles.RedBlood);
     }
 
     public void OnContactExit(GameObject other, Vector3 point)

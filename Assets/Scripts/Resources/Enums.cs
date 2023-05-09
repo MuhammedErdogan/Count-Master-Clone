@@ -107,3 +107,9 @@ public enum FinishType : byte
     KickBoks,
     Archery,
 }
+
+public enum Particles : byte
+{
+    RedBlood,
+    BlueBlood,
+}

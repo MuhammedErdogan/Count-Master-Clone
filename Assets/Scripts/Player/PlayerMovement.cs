@@ -14,11 +14,12 @@ namespace Player
         public float _smoothTime = 0.1f;
         private Vector3 _startPosition;
         private float _screenWidth;
-        private bool _isGameStarted = false;
         private float _currentVelocity;
 
         private float _currentSpeed;
         private bool _isEnemyContact = false;
+
+        Action Action;
 
         void Start()
         {
@@ -27,27 +28,40 @@ namespace Player
 
         private void OnEnable()
         {
-            EventManager.StartListening(EventKeys.OnGameStarted, Init);
+            EventManager.StartListening(EventKeys.LevelLoaded, Init);
             EventManager.StartListening(EventKeys.PlayerOnEnemyContact, EnemyMovementStarted);
             EventManager.StartListening(EventKeys.EnemyContactEnded, EnemyMovementended);
+            EventManager.StartListening(EventKeys.FinishTriggered, FinishMovementStarted );
+            //EventManager.StartListening(EventKeys.TowerCompleted, FinishMovementEnded);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening(EventKeys.OnGameStarted, Init);
+            EventManager.StopListening(EventKeys.LevelLoaded, Init);
             EventManager.StopListening(EventKeys.PlayerOnEnemyContact, EnemyMovementStarted);
             EventManager.StopListening(EventKeys.EnemyContactEnded, EnemyMovementended);
+            EventManager.StopListening(EventKeys.FinishTriggered, FinishMovementStarted);
+            //EventManager.StopListening(EventKeys.TowerCompleted, FinishMovementEnded);
         }
 
         private void Init(object[] obj)
         {
-            _isGameStarted = true;
             _currentSpeed = _speed;
+
+            Action += ForwardMovement;
         }
 
         void Update()
         {
-            if (!_isGameStarted || _isEnemyContact)
+            Action?.Invoke();
+        }
+
+        private void ForwardMovement()
+        {
+            Vector3 forwardMovement = new Vector3(0, 0, _currentSpeed) * Time.deltaTime;
+            transform.position += forwardMovement;
+
+            if (_isEnemyContact)
                 return;
 
             if (Input.GetMouseButtonDown(0))
@@ -64,15 +78,6 @@ namespace Player
             }
         }
 
-        void FixedUpdate()
-        {
-            if (!_isGameStarted)
-                return;
-
-            Vector3 forwardMovement = new Vector3(0, 0, _currentSpeed) * Time.deltaTime;
-            transform.position += forwardMovement;
-        }
-
         private void EnemyMovementStarted(object[] obj)
         {
             _currentSpeed = .25f;
@@ -83,6 +88,24 @@ namespace Player
         {
             _currentSpeed = _speed;
             _isEnemyContact = false;
+        }
+
+        private void FinishMovementStarted(object[] obj)
+        {
+            _currentSpeed = 7;
+
+            Action = () =>
+            {
+                Vector3 forwardMovement = new Vector3(0, 0, _currentSpeed) * Time.deltaTime;
+                transform.position += forwardMovement;
+
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(0, transform.position.y, transform.position.z), 10 * Time.deltaTime);
+            };
+        }
+
+        private void FinishMovementEnded(object[] obj)
+        {
+            Action = null;
         }
     }
 }

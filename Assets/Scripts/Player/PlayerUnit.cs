@@ -164,6 +164,7 @@ namespace Player
                 contactable.OnContactEnter(gameObject, other.ClosestPoint(transform.position));
                 EventManager.TriggerEvent(EventKeys.OnPlayerUnitHit, new object[] { this, other });
                 DestroyUnit();
+                ParticleManager.Instance.InstantiateParticle(transform.position, Particles.BlueBlood);
             }
         }
     }
