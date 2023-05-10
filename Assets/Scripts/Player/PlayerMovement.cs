@@ -47,8 +47,9 @@ namespace Player
         private void Init(object[] obj)
         {
             _currentSpeed = _speed;
+            _isEnemyContact = false;
 
-            Action += ForwardMovement;
+            Action = ForwardMovement;
         }
 
         void Update()

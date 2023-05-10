@@ -26,13 +26,13 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         EventManager.StartListening(EventKeys.OnGameStarted, LoadLevel);
-        EventManager.StartListening(EventKeys.LevelCompleted, NextLevel);
+        EventManager.StartListening(EventKeys.OnNextLevelRequest, NextLevel);
     }
 
     private void OnDisable()
     {
         EventManager.StopListening(EventKeys.OnGameStarted, LoadLevel);
-        EventManager.StopListening(EventKeys.LevelCompleted, NextLevel);
+        EventManager.StopListening(EventKeys.OnNextLevelRequest, NextLevel);
     }
 
     private void LoadLevel(object[] obj = null)

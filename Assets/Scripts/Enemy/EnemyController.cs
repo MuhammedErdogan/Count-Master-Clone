@@ -5,19 +5,25 @@ using Player;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Enemy
 {
     public class EnemyController : MonoBehaviour, IContactable
     {
+        #region Variables
         [Range(0f, 1f)][SerializeField] private float _distanceFactor, _radius;
         [SerializeField] private GameObject _enemyZoneIndicator;
         [SerializeField] private int _enemyCount = 10;
+        [SerializeField] private TextMeshPro _enemyCountText;
         [SerializeField] private EnemyUnit _enemyUnitPrefab;
         [SerializeField] private List<EnemyUnit> _units = new List<EnemyUnit>();
+        #endregion
 
+        #region Actions
         private Action AttackAction;
+        #endregion
 
         private void OnEnable()
         {
@@ -38,11 +44,19 @@ namespace Enemy
 
         private void Init(object[] obj)
         {
-            for (int i = 0; i < _enemyCount; i++)
+            AttackAction = null;
+            _enemyCountText.text = _enemyCount.ToString();
+
+            if (_units.Count < _enemyCount)
             {
-                EnemyUnit unit = Instantiate(_enemyUnitPrefab, transform);
-                _units.Add(unit);
+                var unitToCreate = _enemyCount - _units.Count;
+                for (var i = 0; i < unitToCreate; i++)
+                {
+                    EnemyUnit unit = Instantiate(_enemyUnitPrefab, transform);
+                    _units.Add(unit);
+                }
             }
+
             ReformatUnits();
         }
 
@@ -81,10 +95,7 @@ namespace Enemy
             var col = obj[1] as Collider;
             var unit = col.GetComponent<EnemyUnit>();
 
-            if (!_units.Contains(unit))
-            {
-                return;
-            }
+            if (!_units.Contains(unit)) return;
 
             _units.Remove(unit);
             Destroy(unit.gameObject);
@@ -93,6 +104,8 @@ namespace Enemy
             {
                 EnemyZoneCleared();
             }
+
+            _enemyCountText.text = _units.Count.ToString();
         }
 
         private void EnemyZoneCleared()

@@ -12,7 +12,7 @@ public static class Extension
 
     private static IEnumerator DelayedCoroutine(float delay, Action action)
     {
-        yield return new WaitForSeconds(delay);
+        yield return BetterWaitForSeconds.Wait(delay);
         action();
     }
 }

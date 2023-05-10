@@ -24,24 +24,16 @@ namespace Manager
 
         private void OnEnable()
         {
-            EventManager.StartListening(EventKeys.OnGameStarted, _ =>
-            {
-                SetPriorityTo(CamerasType.Follow_CAM);
-            });
-
+            EventManager.StartListening(EventKeys.LevelLoaded, LevelSetup) ;
             EventManager.StartListening(EventKeys.FinishTriggered, OnFinish);
-            EventManager.StartListening(EventKeys.TowerCompleted, SetTargetToActiveCam);
+            EventManager.StartListening(EventKeys.TowerIsCreating, SetTargetToFinishhCam);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening(EventKeys.OnGameStarted, _ =>
-            {
-                SetPriorityTo(CamerasType.Follow_CAM);
-            });
-
+            EventManager.StopListening(EventKeys.LevelLoaded, LevelSetup);
             EventManager.StopListening(EventKeys.FinishTriggered, OnFinish);
-            EventManager.StopListening(EventKeys.TowerCompleted, SetTargetToActiveCam);
+            EventManager.StopListening(EventKeys.TowerIsCreating, SetTargetToFinishhCam);
         }
 
         public void Init()
@@ -62,9 +54,19 @@ namespace Manager
                 }
             }
 
-            brain = GetComponent<CinemachineBrain>();
+            brain = Camera.main.GetComponent<CinemachineBrain>();
         }
 
+        private void LevelSetup(object[] __)
+        {
+            ImmadiateCameraTransition();
+            SetPriorityTo(CamerasType.Start_CAM);
+
+            this.DelayedAction(0.1f, () =>
+            {
+                SetPriorityTo(CamerasType.Follow_CAM);
+            }, out _);
+        }
 
         private void OnFinish(object[] obj)
         {
@@ -84,15 +86,26 @@ namespace Manager
             activeCam.SetPriority();
         }
 
-        private void SetTargetToActiveCam(object[] obj)
+        private void SetTargetToFinishhCam(object[] obj)
         {
             Transform target = obj[0] as Transform;
-
             var vcam = GetCamera(CamerasType.Finish_CAM_2).GetComponent<CinemachineVirtualCamera>();
 
             vcam.Follow = target;
             vcam.LookAt = target;
             vcam.transform.position = Vector3.zero;
+        }
+
+        private void ImmadiateCameraTransition()
+        {
+            var originalBlend = brain.m_DefaultBlend;
+
+            brain.m_DefaultBlend.m_Time = 0;
+
+            this.DelayedAction(0.1f, () =>
+            {
+                brain.m_DefaultBlend = originalBlend;
+            }, out _);
         }
 
         private void BackLastActiveCam()

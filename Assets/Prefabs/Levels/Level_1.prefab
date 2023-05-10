@@ -903,12 +903,24 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 1.235
       objectReference: {fileID: 0}
     - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -941,6 +953,10 @@ PrefabInstance:
     - target: {fileID: 4123812003564960729, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6614442823501430987, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2611571aa698df4184ed89629f83bb2, type: 3}
@@ -1104,37 +1120,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6034414239230367012}
     m_Modifications:
-    - target: {fileID: 3716675617106829049, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.475
-      objectReference: {fileID: 0}
-    - target: {fileID: 3716675617457572284, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: _enemyCount
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 3716675617457572284, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: _distanceFactor
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 3716675617457572286, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
       propertyPath: m_Name
       value: Enemy Zone
       objectReference: {fileID: 0}
-    - target: {fileID: 3716675617457572286, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3716675617457572287, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3716675617457572287, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3716675617457572287, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3716675617457572287, guid: 2f06d26591d838a45a3ebaf564f1564f, type: 3}
       propertyPath: m_LocalPosition.x

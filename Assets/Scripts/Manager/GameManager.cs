@@ -55,6 +55,9 @@ namespace Manager
                 case ButtonType.Pause:
                     PauseGame();
                     break;
+                case ButtonType.NextLevel:
+                    NextLevel();
+                    break;
                 default:
                     break;
             }
@@ -78,6 +81,11 @@ namespace Manager
         private void ResumeGame()
         {
             EventManager.TriggerEvent(EventKeys.OnGameResumed);
+        }
+
+        private void NextLevel()
+        {
+            EventManager.TriggerEvent(EventKeys.OnNextLevelRequest);
         }
     }
 }

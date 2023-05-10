@@ -15,20 +15,26 @@ namespace Manager
         private void OnEnable()
         {
             EventManager.StartListening(EventKeys.LevelLoaded, OnGameStarted);
+            EventManager.StartListening(EventKeys.OnGamePaused, OnGamePaused);
+            EventManager.StartListening(EventKeys.OnGameResumed, OnGameResumed);
             EventManager.StartListening(EventKeys.LevelCompleted, OnLevelCompleted);
             EventManager.StartListening(EventKeys.LevelFailed, OnLevelFailed);
+            EventManager.StartListening(EventKeys.LevelLoaded, OnGameStarted);
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(EventKeys.LevelLoaded, OnGameStarted);
+            EventManager.StopListening(EventKeys.OnGamePaused, OnGamePaused);
+            EventManager.StopListening(EventKeys.OnGameResumed, OnGameResumed);
             EventManager.StopListening(EventKeys.LevelCompleted, OnLevelCompleted);
             EventManager.StopListening(EventKeys.LevelFailed, OnLevelFailed);
+            EventManager.StopListening(EventKeys.LevelLoaded, OnGameStarted);
         }
 
         private void OnGameStarted(object[] obj)
         {
-            _tmPro.text = $"LEVEL: {(int)obj[0]}";
+            _tmPro.text = $"LEVEL: {(int)obj[0] + 1}";
             startPanel.SetActive(false);
             gamePanel.SetActive(true);
             pausePanel.SetActive(false);

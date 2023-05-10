@@ -5,8 +5,9 @@ public enum EventKeys : uint
     OnGamePaused,
     OnGameResumed,
 
+    OnNextLevelRequest,
+
     LevelLoaded,
-    LevelUnloaded,
     LevelCompleted,
     LevelFailed,
 
@@ -21,6 +22,7 @@ public enum EventKeys : uint
     OnPlayerUnitHit,
 
     FinishTriggered,
+    TowerIsCreating,
     TowerCompleted,
 }
 

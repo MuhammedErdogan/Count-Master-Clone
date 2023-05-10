@@ -70,10 +70,10 @@ namespace Player
         public void MoveToEnemy(Vector3 enemyPos)
         {
             var distance = transform.position - enemyPos;
-            if (distance.magnitude < .75f) return;
+            if (distance.magnitude < .5f) return;
 
             Vector3 refPos = new Vector3(enemyPos.x, transform.position.y, enemyPos.z);
-            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(0.75f / distance.magnitude, .2f, 2));
+            transform.position = Vector3.Lerp(transform.position, refPos, Time.deltaTime * Mathf.Clamp(0.5f / distance.magnitude, .2f, 2));
 
             var enemyDirection = refPos - transform.position;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(enemyDirection), 3f * Time.deltaTime);

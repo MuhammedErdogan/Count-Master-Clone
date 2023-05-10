@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Manager;
 using UnityEngine;
@@ -21,6 +22,33 @@ namespace Player
         [SerializeField] private List<GameObject> _towerList;
 
         private int _unitCount;
+
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(EventKeys.LevelLoaded, _ =>
+            {
+                for (int i = _towerList.Count - 1; i >= 0; i--)
+                {
+                    Destroy(_towerList[i]);
+                }
+
+                _towerList.Clear();
+            });
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(EventKeys.LevelLoaded, _ =>
+            {
+                for (int i = _towerList.Count - 1; i >= 0; i--)
+                {
+                    Destroy(_towerList[i]);
+                }
+
+                _towerList.Clear();
+            });
+        }
 
         public void MakeTower(int unitCount)
         {
@@ -69,10 +97,11 @@ namespace Player
             var towerId = 0;
             transform.DOMoveX(0f, 0.5f).SetEase(Ease.Flash);
 
-            yield return new WaitForSecondsRealtime(0.55f);
+            yield return BetterWaitForSeconds.WaitRealtime(0.55f);
 
-            foreach (int towerHumanCount in _towerCountList)
+            for (int i = 0; i < _towerCountList.Count; i++)
             {
+                int towerHumanCount = _towerCountList[i];
                 MoveTowerListChildrenUpwards();
 
                 GameObject tower = CreateNewTower(towerId);
@@ -82,8 +111,10 @@ namespace Player
                 PositionTowerChildren(tower, towerHumanCount);
 
                 towerId++;
-                yield return new WaitForSecondsRealtime(0.2f);
+                yield return BetterWaitForSeconds.WaitRealtime(0.2f);
             }
+
+            EventManager.TriggerEvent(EventKeys.TowerCompleted, new object[] { _towerList.FirstOrDefault().transform });
         }
 
         private void MoveTowerListChildrenUpwards()
@@ -124,11 +155,9 @@ namespace Player
                     break;
                 }
             }
-
             tower.transform.position = new Vector3(-towerNewPos.x / towerHumanCount, tower.transform.position.y - yOffset, tower.transform.position.z);
-            EventManager.TriggerEvent(EventKeys.TowerCompleted, new object[] { child });
+            EventManager.TriggerEvent(EventKeys.TowerIsCreating, new object[] { child });
         }
-
     }
 }
 

@@ -185,9 +185,9 @@ namespace Player
                 return;
             }
 
-            EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
-
             _units.Remove(unit);
+
+            EventManager.TriggerEvent(EventKeys.OnPlayerUnitCountChange, new object[] { _units.Count });
 
             UpdateCountText(_units.Count);
         }
