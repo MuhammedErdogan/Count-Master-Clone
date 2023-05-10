@@ -152,6 +152,8 @@ namespace Player
                 if (Physics.Raycast(ray, out _, .5f, 1 << Constants.LayerIndexes.STAIR))
                 {
                     transform.parent.SetParent(null);
+                    _animator.SetBool(Constants.Animations.RUN, false);
+                    transform.DOLocalRotate(new Vector3(0, 180, 0), .5f);
                 }
                 yield return 0;
             }

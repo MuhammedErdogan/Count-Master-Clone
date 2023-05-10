@@ -68,6 +68,7 @@ public class LevelManager : MonoBehaviour
         {
             return _currentLevel;
         }
+
         return Random.Range(0, levels.Count);
     }
 }

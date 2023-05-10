@@ -92,7 +92,6 @@ namespace Manager
             var vcam = GetCamera(CamerasType.Finish_CAM_2).GetComponent<CinemachineVirtualCamera>();
 
             vcam.Follow = target;
-            vcam.LookAt = target;
             vcam.transform.position = Vector3.zero;
         }
 

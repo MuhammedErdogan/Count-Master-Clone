@@ -1,3 +1,4 @@
+using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,14 @@ public class LevelModel : MonoBehaviour
     public void SetupLevel()
     {
         gameObject.SetActive(true);
+
+        var enemies = GetComponentsInChildren<EnemyController>(true);
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            EnemyController enemy = enemies[i];
+            enemy.gameObject.SetActive(true);
+        }
     }
 
     public void CloseLevel()

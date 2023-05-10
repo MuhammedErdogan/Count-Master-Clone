@@ -150,13 +150,17 @@ namespace Player
                 tempTowerHumanCount++;
                 i--;
 
+                if (i == 0)
+                {
+                    EventManager.TriggerEvent(EventKeys.TowerIsCreating, new object[] { child });
+                }
+
                 if (tempTowerHumanCount >= towerHumanCount)
                 {
                     break;
                 }
             }
             tower.transform.position = new Vector3(-towerNewPos.x / towerHumanCount, tower.transform.position.y - yOffset, tower.transform.position.z);
-            EventManager.TriggerEvent(EventKeys.TowerIsCreating, new object[] { child });
         }
     }
 }

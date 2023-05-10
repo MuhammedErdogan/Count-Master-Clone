@@ -24,10 +24,46 @@ public class Gate : MonoBehaviour, IContactable
 
     private void Init(object[] objects)
     {
-        var leftSign = LeftOperation switch { Operations.Add => "+", Operations.Subtract => "-", Operations.Multiply => "x", Operations.Divide => "/", _ => "" };
-        var rightSign = rightOperation switch { Operations.Add => "+", Operations.Subtract => "-", Operations.Multiply => "x", Operations.Divide => "/", _ => "" };
+        var leftSign = LeftOperation switch { Operations.Add => "+", Operations.Subtract => "-", Operations.Multiply => "x", Operations.Divide => "÷", _ => "" };
+        var rightSign = rightOperation switch { Operations.Add => "+", Operations.Subtract => "-", Operations.Multiply => "x", Operations.Divide => "÷", _ => "" };
+
         leftGate.transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{leftSign}{leftValue}";
         rightGate.transform.GetChild(0).GetComponent<TextMeshPro>().text = $"{rightSign}{rightValue}";
+
+        SetGateColors();
+    }
+
+    private void SetGateColors()
+    {
+        var gameConfig = Resources.Load<GameConfig>("GameConfig");
+        Debug.Log(gameConfig.ToString());
+
+        Debug.Log(LeftOperation);
+        switch (LeftOperation)
+        {
+            case Operations.Add:
+            case Operations.Multiply:
+                leftGate.GetComponent<MeshRenderer>().material = gameConfig.Green;
+                Debug.Log("Green");
+                break;
+            case Operations.Subtract | Operations.Divide:
+                leftGate.GetComponent<MeshRenderer>().material = gameConfig.Red;
+                Debug.Log("Red");
+                break;
+        };
+
+        Debug.Log(rightOperation);
+        switch (rightOperation)
+        {
+            case Operations.Add:
+            case Operations.Multiply:
+                rightGate.GetComponent<MeshRenderer>().material = gameConfig.Green;
+                break;
+            case Operations.Subtract:
+            case Operations.Divide:
+                rightGate.GetComponent<MeshRenderer>().material = gameConfig.Red;
+                break;
+        };
     }
 
     public void OnContactEnter(GameObject other, Vector3 point)

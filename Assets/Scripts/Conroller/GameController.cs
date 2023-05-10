@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour
 
     private void OnTowerCompleted(object[] __)
     {
-        this.DelayedAction(4f, () =>
+        this.DelayedAction(5f, () =>
         {
             EventManager.TriggerEvent(EventKeys.LevelCompleted, null);
             Time.timeScale = 0f;

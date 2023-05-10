@@ -44,6 +44,8 @@ namespace Enemy
 
         private void Init(object[] obj)
         {
+            GetComponent<Collider>().enabled = true;
+
             AttackAction = null;
             _enemyCountText.text = _enemyCount.ToString();
 
