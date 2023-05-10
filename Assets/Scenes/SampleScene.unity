@@ -241,11 +241,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8006018096552529859, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
   m_PrefabInstance: {fileID: 8006018097598541892}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1353100955 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8006018098195403989, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
-  m_PrefabInstance: {fileID: 8006018097598541892}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1469947075 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8006018096767184007, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
@@ -296,34 +291,6 @@ PrefabInstance:
       propertyPath: levels.Array.data[2]
       value: 
       objectReference: {fileID: 844808648}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: _pools.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.data[1].type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.data[0].count
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.data[1].count
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.data[0].particle
-      value: 
-      objectReference: {fileID: 117395733313359720, guid: e1055c2e9297cb64e819e4aa6041513c, type: 3}
-    - target: {fileID: 1545523014681842929, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
-      propertyPath: particles.Array.data[1].particle
-      value: 
-      objectReference: {fileID: 117395733313359720, guid: 930e06a950438e24db1df0bfb5a21504, type: 3}
     - target: {fileID: 1545523014954785754, guid: 8642e50aa757ad149880bdee37e7809e, type: 3}
       propertyPath: m_Name
       value: Managers
@@ -462,22 +429,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1107919732, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1107919732, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -19
-      objectReference: {fileID: 0}
-    - target: {fileID: 1107919734, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
-      propertyPath: m_Follow
-      value: 
-      objectReference: {fileID: 1353100955}
-    - target: {fileID: 1107919734, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
-      propertyPath: m_Transitions.m_InheritPosition
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8006018097603443834, guid: 5f01dbf5f0faeda459d7d29e166bad90, type: 3}
       propertyPath: m_Name
       value: Core
